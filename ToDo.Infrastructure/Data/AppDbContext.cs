@@ -10,7 +10,7 @@ namespace ToDo.Infrastructure.Data
         }
 
         public DbSet<Tarefa> Tarefas { get; set; }
-
+        public DbSet<Usuario> Usuarios { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -22,6 +22,15 @@ namespace ToDo.Infrastructure.Data
                 entity.Property(e => e.Descricao).HasMaxLength(1000);
                 entity.Property(e => e.DataCriacao).IsRequired();
                 entity.Property(e => e.Concluido).IsRequired();
+            });
+
+            modelBuilder.Entity<Usuario>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Nome).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.SenhaHash).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.DataCriacao).IsRequired();
             });
         }
     }

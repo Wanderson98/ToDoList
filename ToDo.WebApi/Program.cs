@@ -22,6 +22,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
 builder.Services.AddScoped<ITarefaService, TarefaService>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IValidator<CriarUsuarioDTO>, CriarUsuarioDtoValidator>();
 builder.Services.AddScoped<IValidator<CriarTarefaDTO>, CriaTarefaDtoValidator>();
 builder.Services.AddControllers();
 

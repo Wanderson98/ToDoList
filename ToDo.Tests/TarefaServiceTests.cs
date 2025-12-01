@@ -16,7 +16,7 @@ namespace Todo.Tests
     public class TarefaServiceTests
     {   
         [Fact]
-        public async void Deve_Criar_Tarefa_Com_Sucesso()
+        public async Task Deve_Criar_Tarefa_Com_Sucesso()
         {
             // =================================================
             // 1. ARRANGE (Preparar o cenário)
