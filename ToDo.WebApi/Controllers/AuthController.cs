@@ -36,7 +36,7 @@ namespace ToDo.WebApi.Controllers
                 var token = _tokenService.GerarToken(usuario);
                 return Ok(new { Token = token , Usuario = new { usuario.Id, usuario.Nome, usuario.Email } });
             }
-            catch (ValidationException ex)
+            catch (ValidationException)
             {
                 return Unauthorized("Usuário ou senha inválidos.");
             }

@@ -11,13 +11,15 @@ using ToDo.Services.Interfaces;
 using ToDo.Services.Services;
 using ToDo.Services.Validators;
 using ToDo.WebApi.Middlewares;
+using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
@@ -58,19 +60,57 @@ builder.Services.AddAuthentication(options =>
     
 });
 
-var app = builder.Build();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ToDo API", Version = "v1" });
 
+    // Configuração do "Cadeado" (Definição)
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Insira o token JWT assim: {seu_token}"
+    });
+
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                },
+                
+            },
+            new string[] {}
+        }
+    });
+   
+});
+
+
+var app = builder.Build();
+app.UseMiddleware<ErrorMiddleware>();
 // Configure the HTTP request pipeline.
+
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+   app.UseSwagger();
+   app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<ErrorMiddleware>();
+
 
 
 app.MapControllers();
