@@ -1,0 +1,31 @@
+services:
+  # Serviço 1: O Banco de Dados
+  db:
+    image: postgres:latest
+    container_name: postgresToDo
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: appdb
+      POSTGRES_USER: dev
+    ports:
+      - "5432:5432" # Expõe para sua máquina local (para você acessar via DBeaver)
+    volumes:
+      - pgdata:/var/lib/postgresql # Persistência: não perde dados se reiniciar
+
+  # Serviço 2: Sua API
+  api:
+    image: todo-api # Usa a imagem que você acabou de criar
+    build: .        # Ou constrói na hora se não tiver
+    container_name: todo_api
+    depends_on:
+      - db # Só inicia depois que o banco subir
+    ports:
+      - "8080:8080" # Porta externa : Porta interna
+    environment:
+      # Sobrescreve as configurações do appsettings.json
+      - ConnectionStrings__DefaultConnection=${CONNECTION_STRING}
+      - Jwt__Key=${JWT_SECRET}
+
+# Volume para guardar os dados do banco
+volumes:
+  pgdata:
