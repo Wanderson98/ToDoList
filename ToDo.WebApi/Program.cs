@@ -12,14 +12,26 @@ using ToDo.Services.Services;
 using ToDo.Services.Validators;
 using ToDo.WebApi.Middlewares;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi;
+using Serilog;
+using Serilog.Debugging;
 
 
-var builder = WebApplication.CreateBuilder(args);
+SelfLog.Enable(msg => Console.WriteLine(msg));
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json")
+        .Build())
+    .CreateLogger();
+
+try
+{
+    var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 
+builder.Host.UseSerilog();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
@@ -38,7 +50,6 @@ var keyString = builder.Configuration["Jwt:Key"];
 
 if (string.IsNullOrEmpty(keyString))
     throw new InvalidOperationException("Chave JWT não está configurada.");
-
 
 var key = Encoding.ASCII.GetBytes(keyString);
 
@@ -97,7 +108,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 app.UseMiddleware<ErrorMiddleware>();
-// Configure the HTTP request pipeline.
+app.UseSerilogRequestLogging();
 
 
 if (app.Environment.IsDevelopment())
@@ -116,3 +127,12 @@ app.UseAuthorization();
 app.MapControllers();
 app.Run();
 
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Erro ao iniciar a aplicação");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

@@ -25,7 +25,19 @@ services:
       # Sobrescreve as configurações do appsettings.json
       - ConnectionStrings__DefaultConnection=${CONNECTION_STRING}
       - Jwt__Key=${JWT_SECRET}
+      - ASPNETCORE_ENVIRONMENT=Development
 
+  # Serviço 3 Serilog
+  seq:
+    image: datalust/seq:latest
+    container_name: seq_todo
+    ports:
+      - "8081:80" # Expõe a porta 80 do container na porta 8081 da máquina host
+      - "5341:5341" # Expõe a porta 5341 do container na porta 5341 da máquina host
+    environment:
+      ACCEPT_EULA: "Y" # Aceita o EULA automaticamente
+      #SEQ_FIRSTRUN_ADMIN_PASSWORD: "${SEQ_ADMIN_PASSWORD}" # Define a senha do admin
+      SEQ_FIRSTRUN_NOAUTHENTICATION: "true" # Desabilita autenticação para desenvolvimento
 # Volume para guardar os dados do banco
 volumes:
   pgdata:

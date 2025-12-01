@@ -39,7 +39,8 @@ namespace ToDo.WebApi.Middlewares
             else
             {
                 context.Response.StatusCode = HttpStatusCode.InternalServerError.GetHashCode();
-                messageError = "Ocorreu um erro interno no servidor.";
+                //messageError = "Ocorreu um erro interno no servidor.";
+                messageError = exception.Message;
             }
 
             var response = new
