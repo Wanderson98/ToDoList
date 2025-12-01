@@ -13,10 +13,11 @@ namespace ToDo.Domain.Models
 
             this.Titulo = titulo;
             this.Descricao = descricao;
-            this.DataCriacao = DateTime.Now;
+            this.DataCriacao = DateTime.UtcNow;
             this.Concluido = false;
         }
 
+        
 
         public int Id { get; private set; }
         
@@ -30,7 +31,7 @@ namespace ToDo.Domain.Models
         public void MarcarComoConcluida()
         {
             this.Concluido = true;
-            this.DataConclusao = DateTime.Now;
+            this.DataConclusao = DateTime.UtcNow;
         }
 
     }

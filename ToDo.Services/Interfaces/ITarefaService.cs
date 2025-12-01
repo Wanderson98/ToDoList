@@ -10,7 +10,7 @@ namespace ToDo.Services.Interfaces
         Task<Tarefa> CriarTarefaAsync(CriarTarefaDTO criarTarefaDto);
         Task<Tarefa> ObterTarefaPorIdAsync(int id);
         Task<IEnumerable<Tarefa>> ObterTodasTarefasAsync();
-        Task MarcarTarefaComoConcluidaAsync(int id);
+        Task<Tarefa> MarcarTarefaComoConcluidaAsync(int id);
         Task RemoverTarefaAsync(int id);
     }
 }

@@ -36,13 +36,15 @@ namespace ToDo.Services.Services
             return _tarefaRepository.ObterTodasAsync();
         }
 
-        public async Task MarcarTarefaComoConcluidaAsync(int id)
-        {
+        public async Task<Tarefa> MarcarTarefaComoConcluidaAsync(int id)
+        { 
             var tarefa =  await _tarefaRepository.ObterPorIdAsync(id);
             if (tarefa == null) throw new KeyNotFoundException("Tarefa não encontrada.");
 
             tarefa.MarcarComoConcluida();
             await _tarefaRepository.AtualizarAsync(tarefa);
+
+            return tarefa;
         }
 
         public Task RemoverTarefaAsync(int id)
