@@ -1,5 +1,8 @@
+using System.Text;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ToDo.Domain.Interfaces;
 using ToDo.Infrastructure.Data;
 using ToDo.Infrastructure.Repositories;
@@ -26,7 +29,34 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IValidator<CriarUsuarioDTO>, CriarUsuarioDtoValidator>();
 builder.Services.AddScoped<IValidator<CriarTarefaDTO>, CriaTarefaDtoValidator>();
+builder.Services.AddScoped<TokenService>();
 builder.Services.AddControllers();
+
+var keyString = builder.Configuration["Jwt:Key"];
+
+if (string.IsNullOrEmpty(keyString))
+    throw new InvalidOperationException("Chave JWT não está configurada.");
+
+
+var key = Encoding.ASCII.GetBytes(keyString);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{   
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey =  true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+    
+});
 
 var app = builder.Build();
 
@@ -37,6 +67,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseMiddleware<ErrorMiddleware>();
 
 
