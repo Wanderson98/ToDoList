@@ -6,18 +6,26 @@ namespace ToDo.Services.Services
     using System.Threading.Tasks;
     using ToDo.Domain.Interfaces;
     using ToDo.Services.Interfaces;
+    using FluentValidation;
 
     public class TarefaService : ITarefaService
     {
         private readonly ITarefaRepository _tarefaRepository;
-        public TarefaService(ITarefaRepository tarefaRepository)
+        private readonly IValidator<CriarTarefaDTO> _validator;
+        public TarefaService(ITarefaRepository tarefaRepository, IValidator<CriarTarefaDTO> validator)
         {
             _tarefaRepository = tarefaRepository;
+            _validator = validator;
         }
-
 
         public Task<Tarefa> CriarTarefaAsync(CriarTarefaDTO criarTarefaDto)
         {
+            var validationResult = _validator.Validate(criarTarefaDto);
+            if(validationResult.IsValid == false)
+            {
+                throw new ValidationException(validationResult.Errors);
+            }
+            
             var tarefa = new Tarefa(
                 criarTarefaDto.Titulo,
                 criarTarefaDto.Descricao

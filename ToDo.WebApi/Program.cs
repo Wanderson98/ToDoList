@@ -1,9 +1,13 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using ToDo.Domain.Interfaces;
 using ToDo.Infrastructure.Data;
 using ToDo.Infrastructure.Repositories;
+using ToDo.Services.DTOs;
 using ToDo.Services.Interfaces;
 using ToDo.Services.Services;
+using ToDo.Services.Validators;
+using ToDo.WebApi.Middlewares;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +22,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
 builder.Services.AddScoped<ITarefaService, TarefaService>();
+builder.Services.AddScoped<IValidator<CriarTarefaDTO>, CriaTarefaDtoValidator>();
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -29,7 +34,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapControllers();
+app.UseMiddleware<ErrorMiddleware>();
 
+
+app.MapControllers();
 app.Run();
 
