@@ -36,8 +36,8 @@ services:
       - "5341:5341" # Expõe a porta 5341 do container na porta 5341 da máquina host
     environment:
       ACCEPT_EULA: "Y" # Aceita o EULA automaticamente
-      #SEQ_FIRSTRUN_ADMIN_PASSWORD: "${SEQ_ADMIN_PASSWORD}" # Define a senha do admin
-      SEQ_FIRSTRUN_NOAUTHENTICATION: "true" # Desabilita autenticação para desenvolvimento
+      SEQ_FIRSTRUN_ADMINPASSWORD: "${SEQ_ADMIN_PASSWORD}" # Define a senha do admin
+      #SEQ_FIRSTRUN_NOAUTHENTICATION: "true" # Desabilita autenticação para desenvolvimento
 # Volume para guardar os dados do banco
 volumes:
   pgdata:
