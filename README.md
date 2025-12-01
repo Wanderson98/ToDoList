@@ -51,13 +51,14 @@ O projeto segue os princípios da **Clean Architecture** (Arquitetura Limpa), vi
 
 ### Pré-requisitos
 * [Docker](https://www.docker.com/) instalado.
+* [.NET SDK](https://dotnet.microsoft.com/) (para rodar o comando de migração).
 
 ### Passo a Passo (Via Docker)
 
 1.  **Clone o repositório:**
     ```bash
     git clone [https://github.com/Wanderson98/ToDoList.git](https://github.com/Wanderson98/ToDoList.git)
-    cd ToDoList-CleanArch
+    cd ToDoList
     ```
 
 2.  **Configure as variáveis de ambiente:**
@@ -69,11 +70,18 @@ O projeto segue os princípios da **Clean Architecture** (Arquitetura Limpa), vi
     ```
     Isso iniciará: `API` (Porta 8080), `PostgreSQL` (Porta 5432) e `Seq` (Porta 8081).
 
-4.  **Acesse a Documentação:**
-    Abra `http://localhost:8080/swagger` no navegador.
+4.  **⚡ Aplique as Migrations (Criar Banco de Dados):**
+    Como o container do PostgreSQL inicia vazio, execute este comando na raiz do projeto para criar as tabelas:
+    ```bash
+    dotnet ef database update --connection "Host=localhost;Port=5432;Database=appdb;Username=dev;Password=dev123" --project ToDo.Infrastructure --startup-project ToDo.WebApi
+    ```
+    > **Nota:** A string de conexão acima aponta para `localhost` (sua máquina) conectando na porta `5432` exposta pelo Docker.
 
-5.  **Acesse os Logs:**
-    Abra `http://localhost:8081` para ver o dashboard do Seq.
+5.  **Acesse a Documentação (Swagger):**
+    Abra [http://localhost:8080/swagger](http://localhost:8080/swagger).
+
+6.  **Acesse os Logs (Seq):**
+    Abra [http://localhost:8081](http://localhost:8081).
 
 ---
 
