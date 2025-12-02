@@ -56,8 +56,8 @@ O projeto vai além de um simples CRUD, implementando padrões de mercado para s
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/Wanderson98/ToDoList.git](https://github.com/Wanderson98/ToDoList.git)
-    cd ToDoList-CleanArch
+    git clone https://github.com/Wanderson98/ToDoList.git]
+    cd ToDoList
     ```
 
 2.  **Suba a infraestrutura:**
