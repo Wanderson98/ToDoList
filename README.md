@@ -1,7 +1,7 @@
 # 🚀 ToDo List API - Clean Architecture & DevOps
 
 ![Build Status](https://img.shields.io/github/actions/workflow/status/Wanderson98/ToDoList/ci-pipeline.yml?label=CI%20Build&logo=github)
-![.NET](https://img.shields.io/badge/.NET-10%20(Preview)-512bd4?logo=dotnet)
+![.NET](https://img.shields.io/badge/.NET-10%20-512bd4?logo=dotnet)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ed?logo=docker)
 ![Redis](https://img.shields.io/badge/Redis-Cache-red?logo=redis)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-DB-336791?logo=postgresql)
@@ -37,7 +37,7 @@ O projeto vai além de um simples CRUD, implementando padrões de mercado para s
 
 ## 🛠️ Tech Stack
 
-* **Core:** .NET 10 (Preview) / C#
+* **Core:** .NET 10  / C#
 * **Banco de Dados:** PostgreSQL + Entity Framework Core
 * **Cache:** Redis (StackExchange.Redis)
 * **Validação:** FluentValidation
@@ -56,7 +56,7 @@ O projeto vai além de um simples CRUD, implementando padrões de mercado para s
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/SEU_USUARIO/ToDoList-CleanArch.git](https://github.com/SEU_USUARIO/ToDoList-CleanArch.git)
+    git clone [https://github.com/Wanderson98/ToDoList.git](https://github.com/Wanderson98/ToDoList.git)
     cd ToDoList-CleanArch
     ```
 
