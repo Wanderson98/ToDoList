@@ -14,7 +14,7 @@ namespace ToDo.Infrastructure.Repositories
             _context = context;
         }
 
-        public async  Task<Tarefa> AdicionarAsync(Tarefa tarefa)
+        public async Task<Tarefa> AdicionarAsync(Tarefa tarefa)
         {
             await _context.Tarefas.AddAsync(tarefa);
             await _context.SaveChangesAsync();

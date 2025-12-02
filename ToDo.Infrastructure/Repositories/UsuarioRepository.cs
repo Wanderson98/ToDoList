@@ -38,7 +38,7 @@ namespace ToDo.Infrastructure.Repositories
 
         public async Task<Usuario> ObeterPorIdAsync(int id)
         {
-            return await _context.Usuarios.FindAsync(id).AsTask();
+            return await _context.Usuarios.Where(x=> x.Id == id).AsNoTracking().FirstOrDefaultAsync();
         }
 
         public async Task<Usuario> ObterPorEmailAsync(string email)

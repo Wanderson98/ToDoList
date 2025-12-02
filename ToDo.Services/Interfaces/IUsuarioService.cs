@@ -11,7 +11,7 @@ namespace ToDo.Services.Interfaces
         Task<Usuario> ObterUsuarioPorIdAsync(int id);
         Task<Usuario> ObterUsuarioPorEmailAsync(string email);
         Task<IEnumerable<Usuario>> ObterTodosUsuariosAsync();
-        Task AtualizarUsuarioAsync(int id, CriarUsuarioDTO atualizarUsuarioDto);
+        Task AtualizarUsuarioAsync(int id, AtualizarUsuarioDTO atualizarUsuarioDto);
         Task RemoverUsuarioAsync(int id);
         Task<Usuario> AutenticarUsuarioAsync(LoginDTO loginDto);
     }

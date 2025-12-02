@@ -16,5 +16,18 @@ namespace ToDo.Domain.Models
             SenhaHash = senhaHash;
             DataCriacao = DateTime.UtcNow;
         }
+
+        public void AtualizarNome(string nome)
+        {
+            Nome = nome;
+        }
+        public void AtualizarEmail(string email)
+        {
+            Email = email;
+        }
+        public void AtualizarSenha(string senhaHash)
+        {
+            SenhaHash = senhaHash;
+        }
     }
 }

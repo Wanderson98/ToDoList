@@ -34,7 +34,7 @@ namespace ToDo.WebApi.Controllers
             {
                 var usuario = await _usuarioService.AutenticarUsuarioAsync(loginDto);
                 var token = _tokenService.GerarToken(usuario);
-                return Ok(new { Token = token , Usuario = new { usuario.Id, usuario.Nome, usuario.Email } });
+                return Ok(new { Token = token });
             }
             catch (ValidationException)
             {

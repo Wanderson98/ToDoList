@@ -9,6 +9,7 @@ using FluentValidation.Results;
 using ToDo.Domain.Interfaces;
 using ToDo.Services.Services;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
 
 
 namespace Todo.Tests
@@ -25,6 +26,7 @@ namespace Todo.Tests
             // Criamos os Mocks (os dublês) das interfaces que o serviço exige
             var mockRepository = new Mock<ITarefaRepository>();
             var mockValidator = new Mock<IValidator<CriarTarefaDTO>>();
+            var mockCache = new Mock<IDistributedCache>();
 
             // Configurando o Validador para dizer "SIM, está tudo válido"
             // Quando Validate for chamado com qualquer DTO, retorne um ValidationResult vazio (que significa válido)
@@ -39,7 +41,7 @@ namespace Todo.Tests
                     return t; 
                 });
             // Instanciamos o Serviço Real passando os Dublês (.Object)
-            var service = new TarefaService(mockRepository.Object, mockValidator.Object);
+            var service = new TarefaService(mockRepository.Object, mockValidator.Object, mockCache.Object);
 
             // Criamos o dado de entrada
             var dto = new CriarTarefaDTO { Titulo = "Testar Moq", Descricao = "Aprender Mocks" };
@@ -73,11 +75,12 @@ namespace Todo.Tests
             var mockRepository = new Mock<ITarefaRepository>();
             var mockValidator = new Mock<IValidator<CriarTarefaDTO>>();
             var resultadoComErro = new ValidationResult(new[] { new ValidationFailure("Titulo", "Título é obrigatório") });
-
+            var mockCache = new Mock<IDistributedCache>();
+            
             mockValidator.Setup(v => v.Validate(It.IsAny<CriarTarefaDTO>()))
                      .Returns(resultadoComErro);
             
-            var service = new TarefaService(mockRepository.Object, mockValidator.Object);
+            var service = new TarefaService(mockRepository.Object, mockValidator.Object, mockCache.Object);
 
             var dto = new CriarTarefaDTO { Titulo = "Test", Descricao = "Aprender Mocks" };
             await Assert.ThrowsAsync<ValidationException>(async () => await service.CriarTarefaAsync(dto));
