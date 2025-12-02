@@ -112,25 +112,48 @@ builder.Services.AddSwaggerGen(c =>
    
 });
 
+builder.Services.AddCors(
+    options =>
+    {
+        options.AddPolicy("AllowAngularDev",
+            policy =>
+            {
+                policy.WithOrigins("http://localhost:4200") //Porta padrão do Angular 
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+        
+        if (builder.Environment.IsDevelopment())
+        {   
+            options.AddPolicy("AllowAll",
+                policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+        }
+
+    }
+);
 
 var app = builder.Build();
 app.UseMiddleware<ErrorMiddleware>();
 app.UseSerilogRequestLogging();
-
+app.UseHttpsRedirection();
 
 if (app.Environment.IsDevelopment())
 {
-   app.UseSwagger();
-   app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    app.UseCors("AllowAll");
+} else
+{
+    app.UseCors("AllowAngularDev");
 }
 
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
-
-
-
 app.MapControllers();
 app.Run();
 
