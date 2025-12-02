@@ -1,123 +1,114 @@
 # 🚀 ToDo List API - Clean Architecture & DevOps
 
 ![Build Status](https://img.shields.io/github/actions/workflow/status/Wanderson98/ToDoList/ci-pipeline.yml?label=CI%20Build&logo=github)
-![.NET](https://img.shields.io/badge/.NET-10%20-512bd4?logo=dotnet)
+![.NET](https://img.shields.io/badge/.NET-10%20(Preview)-512bd4?logo=dotnet)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ed?logo=docker)
-![License](https://img.shields.io/badge/License-MIT-green)
+![Redis](https://img.shields.io/badge/Redis-Cache-red?logo=redis)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-DB-336791?logo=postgresql)
 
-Este projeto é uma Web API robusta para gerenciamento de tarefas, desenvolvida com foco em **Clean Architecture**, **Boas Práticas de Engenharia de Software** e **Cultura DevOps**.
+sta é uma Web API de referência desenvolvida para demonstrar a aplicação de **Clean Architecture**, **DevOps Moderno** e **Alta Performance** em ambientes .NET.
 
-O objetivo principal não é apenas criar uma lista de tarefas, mas demonstrar a implementação de um ciclo completo de desenvolvimento de software moderno, desde a concepção do domínio até o deploy automatizado.
-
----
-
-## 🏗️ Arquitetura e Design
-
-O projeto segue os princípios da **Clean Architecture** (Arquitetura Limpa), visando desacoplamento e testabilidade. A solução está dividida em:
-
-* **🧩 ToDo.Domain:** O coração do sistema. Contém as Entidades (`Tarefa`, `Usuario`) e Interfaces de Repositório. Não depende de ninguém.
-* **⚙️ ToDo.Services:** Regras de negócio, Validações (`FluentValidation`), DTOs e lógica de Autenticação.
-* **💻 ToDo.Infrastructure:** Implementação técnica. Acesso a dados (`EF Core`), Mapeamento com Banco de Dados.
-* **🌐 ToDo.WebApi:** A porta de entrada. Controllers, Middlewares de Erro, Configuração de DI e Swagger.
+O projeto vai além de um simples CRUD, implementando padrões de mercado para segurança, observabilidade e escalabilidade.
 
 ---
 
-## 🛠️ Tech Stack (Tecnologias)
+## 🌟 Diferenciais e Funcionalidades
 
-### Core
-* **C# / .NET 10** (Compatível com .NET 8/9)
-* **Entity Framework Core** (ORM)
-* **PostgreSQL** (Banco de Dados Relacional)
+### 🏗️ Arquitetura & Design
+* **Clean Architecture:** Separação estrita de responsabilidades (Domain, Services, Infra, WebApi).
+* **Domain-Driven Design (DDD):** Entidades ricas e validações de domínio.
+* **Pattern Cache-Aside:** Uso inteligente de **Redis** para reduzir carga no banco e acelerar leituras.
 
-### Qualidade & Segurança
-* **xUnit & Moq:** Testes Unitários automatizados para camada de Serviço.
-* **FluentValidation:** Validação de entrada de dados e regras de negócio.
-* **JWT (JSON Web Token):** Autenticação Stateless.
-* **BCrypt:** Hashing seguro de senhas.
-* **User Secrets:** Proteção de credenciais em ambiente de desenvolvimento.
+### 🔒 Segurança
+* **Autenticação JWT:** Tokens seguros com Claims.
+* **Criptografia:** Senhas armazenadas com hash **BCrypt**.
+* **Gestão de Perfil:** Endpoints seguros para o usuário consultar e atualizar seus dados.
+* **Proteção de Segredos:** Uso de User Secrets em desenvolvimento e Variáveis de Ambiente em produção.
 
-### DevOps & Observabilidade
-* **Docker & Docker Compose:** Containerização da API, Banco e Ferramentas.
-* **GitHub Actions:** Pipeline de CI/CD (Build, Test e Push para Docker Hub).
-* **Serilog:** Logging estruturado.
-* **Seq:** Servidor de centralização e visualização de logs em tempo real.
+### 📊 Observabilidade
+* **Logging Estruturado:** Implementação do **Serilog**.
+* **Dashboard em Tempo Real:** Monitoramento de erros e performance via **Seq**.
 
-### Documentação
-* **Swagger (Swashbuckle):** Documentação interativa da API com suporte a JWT.
+### 🐳 DevOps
+* **Docker Full Stack:** API, Banco (Postgres), Cache (Redis) e Logs (Seq) orquestrados via Docker Compose.
+* **CI/CD:** Pipeline automatizado no GitHub Actions para testes e publicação no Docker Hub.
+
+---
+
+## 🛠️ Tech Stack
+
+* **Core:** .NET 10 (Preview) / C#
+* **Banco de Dados:** PostgreSQL + Entity Framework Core
+* **Cache:** Redis (StackExchange.Redis)
+* **Validação:** FluentValidation
+* **Testes:** xUnit + Moq
+* **Documentação:** Swagger (Swashbuckle) com suporte a XML Comments
 
 ---
 
 ## 🚀 Como Rodar o Projeto
 
 ### Pré-requisitos
-* [Docker](https://www.docker.com/) instalado.
-* [.NET SDK](https://dotnet.microsoft.com/) (para rodar o comando de migração).
+* [Docker Desktop](https://www.docker.com/) instalado.
+* [.NET SDK](https://dotnet.microsoft.com/) (para rodar migrations).
 
-### Passo a Passo (Via Docker)
+### Passo a Passo
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/Wanderson98/ToDoList.git](https://github.com/Wanderson98/ToDoList.git)
-    cd ToDoList
+    git clone [https://github.com/SEU_USUARIO/ToDoList-CleanArch.git](https://github.com/SEU_USUARIO/ToDoList-CleanArch.git)
+    cd ToDoList-CleanArch
     ```
 
-2.  **Configure as variáveis de ambiente:**
-    Crie um arquivo `.env` na raiz (baseado nas configurações do `docker-compose.yml`) ou ajuste o compose para seus testes locais.
-
-3.  **Suba a infraestrutura:**
+2.  **Suba a infraestrutura:**
+    Este comando sobe a API, Postgres, Redis e Seq.
     ```bash
     docker compose up -d --build
     ```
-    Isso iniciará: `API` (Porta 8080), `PostgreSQL` (Porta 5432) e `Seq` (Porta 8081).
 
-4.  **⚡ Aplique as Migrations (Criar Banco de Dados):**
-    Como o container do PostgreSQL inicia vazio, execute este comando na raiz do projeto para criar as tabelas:
+3.  **⚡ Inicialize o Banco de Dados:**
+    Execute a migration para criar as tabelas no container do Postgres:
     ```bash
     dotnet ef database update --connection "Host=localhost;Port=5432;Database=appdb;Username=dev;Password=dev123" --project ToDo.Infrastructure --startup-project ToDo.WebApi
     ```
-    > **Nota:** A string de conexão acima aponta para `localhost` (sua máquina) conectando na porta `5432` exposta pelo Docker.
 
-5.  **Acesse a Documentação (Swagger):**
-    Abra [http://localhost:8080/swagger](http://localhost:8080/swagger).
-
-6.  **Acesse os Logs (Seq):**
-    Abra [http://localhost:8081](http://localhost:8081).
+4.  **Acesse os Serviços:**
+    * 📄 **Swagger (Doc):** [http://localhost:8080/swagger](http://localhost:8080/swagger)
+    * 📊 **Seq (Logs):** [http://localhost:8081](http://localhost:8081)
 
 ---
 
-## 🧪 Rodando os Testes
+## 🔌 Endpoints Principais
 
-Para executar a suíte de testes unitários:
+A API possui política de **CORS** configurada, pronta para integração com Front-ends (Angular/React).
+
+### 🔐 Autenticação (Público)
+* `POST /api/auth/cadastrar`: Registra um novo usuário.
+* `POST /api/auth/login`: Retorna o Token JWT.
+
+### 👤 Usuário (Requer Token)
+* `GET /api/usuarios/perfil`: Retorna os dados do usuário logado.
+* `PUT /api/usuarios`: Atualiza nome, email ou senha (exige senha atual).
+
+### ✅ Tarefas (Requer Token - Com Cache Redis)
+* `GET /api/todo`: Lista tarefas (Cacheado por 5 min).
+* `POST /api/todo`: Cria tarefa (Invalida cache).
+* `PATCH /api/todo/{id}/concluir`: Marca como concluída.
+* `DELETE /api/todo/{id}`: Remove tarefa.
+
+---
+
+## 🧪 Testes
+
+O projeto possui cobertura de testes unitários na camada de serviço, validando regras de negócio e mocks de repositório.
 
 ```bash
 dotnet test
 ```
 
-🔌 Endpoints Principais
-
-A API é protegida por JWT. É necessário criar um usuário e realizar login para acessar os recursos de tarefas.
-
-Auth
-
-    POST /api/auth/cadastrar: Cria um novo usuário.
-
-    POST /api/auth/login: Retorna o Token JWT.
-
-Tarefas (Requer Token Bearer)
-
-    GET /api/todo: Lista tarefas.
-
-    POST /api/todo: Cria tarefa.
-
-    GET /api/todo/{id}: Detalhes.
-
-    PATCH /api/todo/{id}/concluir: Marca como concluída.
-
-    DELETE /api/todo/{id}: Remove tarefa.
-
 📈 Melhorias Futuras (Roadmap)
 
-    [ ] Implementar Cache Distribuído com Redis.
+    [x] Implementar Cache Distribuído com Redis.
 
     [ ] Adicionar Testes de Integração (Testcontainers).
 
