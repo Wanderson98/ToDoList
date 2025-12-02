@@ -14,6 +14,7 @@ using ToDo.WebApi.Middlewares;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Debugging;
+using Microsoft.Extensions.Caching.Distributed;
 
 
 SelfLog.Enable(msg => Console.WriteLine(msg));
@@ -36,6 +37,12 @@ builder.Host.UseSerilog();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection" ?? "localhost:6379");
+    options.InstanceName = "ToDoInstance_";
+});
 
 builder.Services.AddScoped<ITarefaRepository, TarefaRepository>();
 builder.Services.AddScoped<ITarefaService, TarefaService>();

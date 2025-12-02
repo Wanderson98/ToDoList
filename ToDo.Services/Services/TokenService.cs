@@ -30,7 +30,7 @@ namespace ToDo.Services.Services
             {
                 Subject = new ClaimsIdentity( new []{
                     new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                    new Claim(ClaimTypes.Name, usuario.Email) 
+                    new Claim(ClaimTypes.Name, usuario.Email!) 
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(

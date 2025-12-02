@@ -19,11 +19,13 @@ services:
     container_name: todo_api
     depends_on:
       - db # Só inicia depois que o banco subir
+      - redis
     ports:
       - "8080:8080" # Porta externa : Porta interna
     environment:
       # Sobrescreve as configurações do appsettings.json
       - ConnectionStrings__DefaultConnection=${CONNECTION_STRING}
+      - ConnectionStrings__DRedisConnection=${REDIS_CONNECTION_STRING}
       - Jwt__Key=${JWT_SECRET}
       - ASPNETCORE_ENVIRONMENT=Development
 
@@ -38,6 +40,19 @@ services:
       ACCEPT_EULA: "Y" # Aceita o EULA automaticamente
       SEQ_FIRSTRUN_ADMINPASSWORD: "${SEQ_ADMIN_PASSWORD}" # Define a senha do admin
       #SEQ_FIRSTRUN_NOAUTHENTICATION: "true" # Desabilita autenticação para desenvolvimento
+    volumes:
+      - seq_data:/data
+
+  redis:
+    image: "redis:latest"
+    container_name: redis_todo
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
 # Volume para guardar os dados do banco
 volumes:
   pgdata:
+  redis_data:
+  seq_data:

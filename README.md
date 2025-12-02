@@ -17,7 +17,7 @@ O projeto segue os princípios da **Clean Architecture** (Arquitetura Limpa), vi
 
 * **🧩 ToDo.Domain:** O coração do sistema. Contém as Entidades (`Tarefa`, `Usuario`) e Interfaces de Repositório. Não depende de ninguém.
 * **⚙️ ToDo.Services:** Regras de negócio, Validações (`FluentValidation`), DTOs e lógica de Autenticação.
-* **💻  ToDo.Infrastructure:** Implementação técnica. Acesso a dados (`EF Core`), Mapeamento com Banco de Dados.
+* **💻 ToDo.Infrastructure:** Implementação técnica. Acesso a dados (`EF Core`), Mapeamento com Banco de Dados.
 * **🌐 ToDo.WebApi:** A porta de entrada. Controllers, Middlewares de Erro, Configuração de DI e Swagger.
 
 ---

@@ -7,18 +7,24 @@ namespace ToDo.Services.Services
     using ToDo.Domain.Interfaces;
     using ToDo.Services.Interfaces;
     using FluentValidation;
+    using Microsoft.Extensions.Caching.Distributed;
+    using System.Text.Json;
 
     public class TarefaService : ITarefaService
     {
         private readonly ITarefaRepository _tarefaRepository;
+        private readonly IDistributedCache _cache;
         private readonly IValidator<CriarTarefaDTO> _validator;
-        public TarefaService(ITarefaRepository tarefaRepository, IValidator<CriarTarefaDTO> validator)
+
+        private const string CacheKeyTodasTarefas = "tarefas_todas";
+        public TarefaService(ITarefaRepository tarefaRepository, IValidator<CriarTarefaDTO> validator, IDistributedCache cache)
         {
             _tarefaRepository = tarefaRepository;
             _validator = validator;
+            _cache = cache;
         }
 
-        public Task<Tarefa> CriarTarefaAsync(CriarTarefaDTO criarTarefaDto)
+        public async Task<Tarefa> CriarTarefaAsync(CriarTarefaDTO criarTarefaDto)
         {
             var validationResult = _validator.Validate(criarTarefaDto);
             if(validationResult.IsValid == false)
@@ -30,18 +36,35 @@ namespace ToDo.Services.Services
                 criarTarefaDto.Titulo,
                 criarTarefaDto.Descricao
             );
-
-            return _tarefaRepository.AdicionarAsync(tarefa);
+            await _cache.RemoveAsync(CacheKeyTodasTarefas);
+            return await _tarefaRepository.AdicionarAsync(tarefa);
         }
 
-        public Task<Tarefa> ObterTarefaPorIdAsync(int id)
+        public async Task<Tarefa> ObterTarefaPorIdAsync(int id)
         {
-            return _tarefaRepository.ObterPorIdAsync(id);
+            return await _tarefaRepository.ObterPorIdAsync(id);
         }
 
-        public Task<IEnumerable<Tarefa>> ObterTodasTarefasAsync()
+        public async Task<IEnumerable<Tarefa>> ObterTodasTarefasAsync()
         {
-            return _tarefaRepository.ObterTodasAsync();
+            string? jsonTarefas = await _cache.GetStringAsync(CacheKeyTodasTarefas);
+
+            if(!string.IsNullOrEmpty(jsonTarefas))
+            {
+                return JsonSerializer.Deserialize<IEnumerable<Tarefa>>(jsonTarefas) ?? new List<Tarefa>();
+                
+            }
+
+            var tarefas = await _tarefaRepository.ObterTodasAsync();
+            var opcoesCache = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+            };
+
+            string json = JsonSerializer.Serialize(tarefas);
+            await _cache.SetStringAsync(CacheKeyTodasTarefas, json, opcoesCache);
+
+            return tarefas;
         }
 
         public async Task<Tarefa> MarcarTarefaComoConcluidaAsync(int id)
@@ -51,13 +74,14 @@ namespace ToDo.Services.Services
 
             tarefa.MarcarComoConcluida();
             await _tarefaRepository.AtualizarAsync(tarefa);
-
+            await _cache.RemoveAsync(CacheKeyTodasTarefas);
             return tarefa;
         }
 
-        public Task RemoverTarefaAsync(int id)
+        public async Task RemoverTarefaAsync(int id)
         {
-            return _tarefaRepository.RemoverAsync(id);
+            await _cache.RemoveAsync(CacheKeyTodasTarefas);
+            await  _tarefaRepository.RemoverAsync(id);
         }
     }
 }

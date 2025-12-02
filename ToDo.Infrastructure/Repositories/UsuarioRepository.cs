@@ -21,19 +21,24 @@ namespace ToDo.Infrastructure.Repositories
             return usuario;
         }
 
-        public Task AtualizarUsuarioAsync(Usuario usuario)
+        public async Task<Usuario> AtualizarUsuarioAsync(Usuario usuario)
         {
-            throw new NotImplementedException();
+            _context.Usuarios.Update(usuario);
+            await  _context.SaveChangesAsync();
+            return usuario;
         }
 
-        public Task ExcluirUsuarioAsync(int id)
+        public async Task ExcluirUsuarioAsync(int id)
         {
-            throw new NotImplementedException();
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null) throw new KeyNotFoundException("Usuário não encontrado.");
+            _context.Usuarios.Remove(usuario);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<Usuario> ObeterPorIdAsync(int id)
+        public async Task<Usuario> ObeterPorIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Usuarios.FindAsync(id).AsTask();
         }
 
         public async Task<Usuario> ObterPorEmailAsync(string email)
@@ -41,9 +46,9 @@ namespace ToDo.Infrastructure.Repositories
             return await _context.Usuarios.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public Task<IEnumerable<Usuario>> ObterTodosAsync()
+        public async Task<IEnumerable<Usuario>> ObterTodosAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Usuarios.AsNoTracking().ToListAsync();
         }
     }
 }

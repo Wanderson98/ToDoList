@@ -24,7 +24,7 @@ namespace ToDo.Services.Services
 
         public async Task<Usuario> AutenticarUsuarioAsync(LoginDTO loginDto)
         {
-            var usuario = await _usuarioRepository.ObterPorEmailAsync(loginDto.Email);
+            var usuario = await _usuarioRepository.ObterPorEmailAsync(loginDto.Email!);
             if (usuario == null || !BCrypt.Net.BCrypt.Verify(loginDto.Senha, usuario.SenhaHash))
             {
                 throw new ValidationException(new[] { new ValidationFailure("Autenticação", "Email ou senha inválidos.") });

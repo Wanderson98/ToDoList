@@ -8,7 +8,7 @@ namespace ToDo.Domain.Interfaces
         Task<Usuario> ObterPorEmailAsync(string email);
         Task<IEnumerable<Usuario>> ObterTodosAsync();
         Task<Usuario> AdicionarUsuarioAsync(Usuario usuario);
-        Task AtualizarUsuarioAsync(Usuario usuario);
+        Task<Usuario>  AtualizarUsuarioAsync(Usuario usuario);
         Task ExcluirUsuarioAsync(int id);
     }
 }
