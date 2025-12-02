@@ -1,7 +1,7 @@
 # 🚀 ToDo List API - Clean Architecture & DevOps
 
 ![Build Status](https://img.shields.io/github/actions/workflow/status/Wanderson98/ToDoList/ci-pipeline.yml?label=CI%20Build&logo=github)
-![.NET](https://img.shields.io/badge/.NET-10%20(Preview)-512bd4?logo=dotnet)
+![.NET](https://img.shields.io/badge/.NET-10%20-512bd4?logo=dotnet)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ed?logo=docker)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
@@ -17,7 +17,7 @@ O projeto segue os princípios da **Clean Architecture** (Arquitetura Limpa), vi
 
 * **🧩 ToDo.Domain:** O coração do sistema. Contém as Entidades (`Tarefa`, `Usuario`) e Interfaces de Repositório. Não depende de ninguém.
 * **⚙️ ToDo.Services:** Regras de negócio, Validações (`FluentValidation`), DTOs e lógica de Autenticação.
-* **asd ToDo.Infrastructure:** Implementação técnica. Acesso a dados (`EF Core`), Mapeamento com Banco de Dados.
+* **💻  ToDo.Infrastructure:** Implementação técnica. Acesso a dados (`EF Core`), Mapeamento com Banco de Dados.
 * **🌐 ToDo.WebApi:** A porta de entrada. Controllers, Middlewares de Erro, Configuração de DI e Swagger.
 
 ---
